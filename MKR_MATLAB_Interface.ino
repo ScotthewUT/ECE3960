@@ -34,7 +34,7 @@ int status = WL_IDLE_STATUS;
 
 // Set up the credentials and objects for the access point
 char ssid[] = "TEAM_TBD_BOT";
-char pass[] = "RSWPASSSUPERSECURE";
+char pass[] = "ECE3960RSW";
 unsigned int localPort = 551;
 char packetBuffer[256];
 WiFiUDP Udp;
