@@ -1,4 +1,6 @@
 %% CALIBRATE REFLECTANCE SENSOR
+function [avg_data] = ReflectanceCalibrate()
+
 IR_RR = 1;
 IR_CR = 2;
 IR_CL = 3;
@@ -13,7 +15,6 @@ pause(0.02);
 data = zeros(50, 4);
 avg_data = zeros(2, 4);
 
-%%
 
 fprintf("Place TBD Bot on light, path-free area.\n");
 fprintf("Calibrating reflectance sensors...\n");
@@ -51,8 +52,8 @@ avg_data(1,:) = mean(data);
 avg_data(1,:) = round(avg_data(1,:));
 fprintf("  LL |  CL |  CR |  RR\n");
 fprintf(" %i | %i | %i | %i\n", avg_data(1,IR_LL), avg_data(1, IR_CL), ...
-        avg_data(1, IR_CR), avg_data(1, IR_RR));
-    
+    avg_data(1, IR_CR), avg_data(1, IR_RR));
+
 fprintf("Place TBD Bot centered on black line path.\n");
 fprintf("Calibrating reflectance sensors...\n");
 pause(0.5);
@@ -76,4 +77,6 @@ avg_data(2,:) = mean(data);
 avg_data(2,:) = round(avg_data(2,:));
 fprintf("  LL |  CL |  CR |  RR\n");
 fprintf(" %i | %i | %i | %i\n", avg_data(2, IR_LL),avg_data(2, IR_CL), ...
-        avg_data(2, IR_CR), avg_data(2, IR_RR));
+    avg_data(2, IR_CR), avg_data(2, IR_RR));
+
+end
