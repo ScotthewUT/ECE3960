@@ -10,9 +10,9 @@ MTR_L = 4;
 MTR_SPD = 12;
 
 r = MKR_MotorCarrier;
-pause(0.02)
+pause(0.05)
 r.reflectanceSetup();
-pause(0.02);
+pause(0.05);
 data = zeros(50, 4);
 cal_data = zeros(2, 4);
 

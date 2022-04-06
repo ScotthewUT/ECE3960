@@ -9,7 +9,7 @@ IR_LL = 4;
 adj_rdng = zeros(1,4);
 
 for idx = 1:length(adj_rdng)
-    adj_rdng(idx) = (readings(idx) - avg_data(1,idx)) / (avg_data(2,idx) - avg_data(1,idx));
+    adj_rdng(idx) = (readings(idx) - cal_data(1,idx)) / (cal_data(2,idx) - cal_data(1,idx));
 end
 
 end
