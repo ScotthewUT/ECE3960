@@ -1,5 +1,5 @@
 %% CALIBRATE REFLECTANCE SENSOR
-function [cal_data] = ReflectanceCalibrate()
+function [cal_data] = ReflectanceCalibrate(bot)
 
 IR_RR = 1;
 IR_CR = 2;
@@ -9,46 +9,42 @@ MTR_R = 3;
 MTR_L = 4;
 MTR_SPD = 12;
 
-r = MKR_MotorCarrier;
-pause(0.05)
-r.reflectanceSetup();
-pause(0.05);
+bot.reflectanceSetup();
 data = zeros(50, 4);
 cal_data = zeros(2, 4);
-
 
 fprintf("Place TBD Bot on light, path-free area.\n");
 fprintf("Calibrating reflectance sensors...\n");
 pause(0.5);
 for count = 0:4
-    r.setRGB(225,45,0);
+    bot.setRGB(225,45,0);
     fprintf("%i\n",5 - count);
     pause(0.7);
-    r.setRGB(0,0,0);
+    bot.setRGB(0,0,0);
     pause(0.3);
 end
-r.setRGB(255,0,0);
+bot.setRGB(255,0,0);
 
-r.motor(MTR_R, MTR_SPD);
-r.motor(MTR_L,-MTR_SPD);
+bot.motor(MTR_R, MTR_SPD);
+bot.motor(MTR_L,-MTR_SPD);
 for row = 1:25
-    ref = r.readReflectance();
+    ref = bot.readReflectance();
     data(row,:) = ref(1,:);
     pause(0.15);
 end
-r.motor(MTR_R, 0);
-r.motor(MTR_L, 0);
+bot.motor(MTR_R, 0);
+bot.motor(MTR_L, 0);
 pause(0.5);
-r.motor(MTR_R,-MTR_SPD);
-r.motor(MTR_L, MTR_SPD);
+bot.motor(MTR_R,-MTR_SPD);
+bot.motor(MTR_L, MTR_SPD);
 for row = 26:50
-    ref = r.readReflectance();
+    ref = bot.readReflectance();
     data(row,:) = ref(1,:);
     pause(0.15);
 end
-r.motor(MTR_R, 0);
-r.motor(MTR_L, 0);
-r.setRGB(0,255,0);
+bot.motor(MTR_R, 0);
+bot.motor(MTR_L, 0);
+bot.setRGB(0,255,0);
 cal_data(1,:) = mean(data);
 cal_data(1,:) = round(cal_data(1,:));
 fprintf("  LL |  CL |  CR |  RR\n");
@@ -61,45 +57,45 @@ for idx = 1:3
     fprintf("Calibrating reflectance sensors...\n");
     pause(0.5);
     for count = 0:4
-        r.setRGB(225,45,0);
+        bot.setRGB(225,45,0);
         fprintf("%i\n",5 - count);
         pause(0.7);
-        r.setRGB(0,0,0);
+        bot.setRGB(0,0,0);
         pause(0.3);
     end
-    r.setRGB(255,0,0);
+    bot.setRGB(255,0,0);
     
     data = zeros(48,4);
-    r.motor(MTR_R,-MTR_SPD);
-    r.motor(MTR_L, MTR_SPD);
+    bot.motor(MTR_R,-MTR_SPD);
+    bot.motor(MTR_L, MTR_SPD);
     for row = 1:8
-        ref = r.readReflectance();
+        ref = bot.readReflectance();
         data(row,:) = ref(1,:);
         pause(0.05);
     end
-    r.motor(MTR_R, MTR_SPD);
-    r.motor(MTR_L,-MTR_SPD);
+    bot.motor(MTR_R, MTR_SPD);
+    bot.motor(MTR_L,-MTR_SPD);
     for row = 9:24
-        ref = r.readReflectance();
+        ref = bot.readReflectance();
         data(row,:) = ref(1,:);
         pause(0.05);
     end
-    r.motor(MTR_R,-MTR_SPD);
-    r.motor(MTR_L, MTR_SPD);
+    bot.motor(MTR_R,-MTR_SPD);
+    bot.motor(MTR_L, MTR_SPD);
     for row = 25:40
-        ref = r.readReflectance();
+        ref = bot.readReflectance();
         data(row,:) = ref(1,:);
         pause(0.05);
     end
-    r.motor(MTR_R, MTR_SPD);
-    r.motor(MTR_L,-MTR_SPD);
+    bot.motor(MTR_R, MTR_SPD);
+    bot.motor(MTR_L,-MTR_SPD);
     for row = 41:48
-        ref = r.readReflectance();
+        ref = bot.readReflectance();
         data(row,:) = ref(1,:);
         pause(0.05);
     end
-    r.motor(MTR_R, 0);
-    r.motor(MTR_L, 0);
+    bot.motor(MTR_R, 0);
+    bot.motor(MTR_L, 0);
     max_data(idx,:) = max(data);
 end
 
