@@ -30,7 +30,14 @@ while true
             end
         case "PICK PATH"   % At intersection and determing path choice.
         case "CHECK"       % At path end; checking for pillar.
+            detect_pillar=Pilalr_Detection(r)
+            if detect_pillar==true
+                bot_state = "APPROACH";
+            else 
+                bot_state = "RETREAT"
         case "APPROACH"    % Approaching pillar.
+            approach_pillar=Approach_Pillar(r)
+            bot_state="GRAB"
         case "GRAB"        % Grabbing target with servo gripper.
         case "RETREAT"     % Retreating from pillar and returning to line.
         case "CLASSIFY"    % Classifying the currently held object.
