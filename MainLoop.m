@@ -40,6 +40,8 @@ while true
             approach_pillar=Approach_Pillar(r)
             bot_state="GRAB"
         case "GRAB"        % Grabbing target with servo gripper.
+            [encoder_val]=GrabBlock(bot)
+            bot_state="CLASSIFY";
         case "RETREAT"     % Retreating from pillar and returning to line.
         case "CLASSIFY"    % Classifying the currently held object.
         case "DROP"        % Dropping object in goal.
