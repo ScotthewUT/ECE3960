@@ -64,7 +64,7 @@ while true
             bot_state="CLASSIFY";
         case "RETREAT"     % Retreating from pillar and returning to line.
             %function for retreating the bot
-            bot_state="PATH_FOLLOW";
+            bot_state="LINE_FOLLOW";
         case "CLASSIFY"    % Classifying the currently held object.
             
             bot_state="RETREAT";
