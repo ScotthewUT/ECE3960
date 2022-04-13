@@ -29,5 +29,4 @@ pause(0.38)
 r.motor(MTR_R, 0)
 r.motor(MTR_L, 0)
 
-r.servo(2,180)
 end
