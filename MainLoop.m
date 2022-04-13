@@ -2,6 +2,7 @@
 clear; clc; close all; instrreset;
 pause(0.1);
 bot = MKR_MotorCarrier;
+r = MKR_MotorCarrier;
 pause(0.1);
 
 % DEFINE CONSTANTS
