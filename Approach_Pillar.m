@@ -1,5 +1,4 @@
-function approach_pillar = Approach_Pillar
-r = MKR_MotorCarrier;
+function approach_pillar = Approach_Pillar(r)
 MTR_R = 3;
 MTR_L = 4;
 r.servo(2,0)
