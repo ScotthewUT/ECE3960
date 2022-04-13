@@ -1,6 +1,4 @@
-function detect_pillar = Pillar_Detection
-
-r = MKR_MotorCarrier;
+function detect_pillar = Pillar_Detection(r)
 pulseVal = r.ultrasonicPulse;
 scaleFactor = 10/610;
 dist = scaleFactor*pulseVal
