@@ -1,13 +1,11 @@
 %% Collect Data (Uncomment when needed)
 r = MKR_MotorCarrier;
-blockNumber = 25;
-Label = 3;
-r.servo(2,0)
-pause(5)
+blockNumber = 6;
+Label = 2;
 r.servo(2,180)
 pause(2)
-data = data_gather(r)
-%save(['block-',num2str(blockNumber),'.mat'],'data')
+data = data_gather(r, Label)
+save(['block-',num2str(blockNumber),'.mat'],'data')
 r.servo(2,0)
 %% Read In data
 
@@ -58,8 +56,8 @@ numClasses = 3;
 
 %%%%%%%%%%%%%%%%%%%%% YOU SHOULD MODIFY THESE PARAMETERS %%%%%%%%%%%%%%%%%%%
 
-learnRate = 0.003; %how quickly network makes changes and learns
-maxEpoch = 10000; %how long the network learns
+learnRate = 0.000005; %how quickly network makes changes and learns
+maxEpoch = 2500; %how long the network learns
 
 %%%%%%%%%%%%%%%%%%%%%%% END OF YOUR MODIFICATIONS %%%%%%%%%%%%%%%%%%%%%%
 
@@ -85,20 +83,23 @@ disp("The Neural Network Predicted:"); disp(predictions); %display predictions
 disp("Correct Answers"); disp(yTest); % display correct answers
 figure(); confusionchart(yTest,predictions); % plot a confusion matrix
 
-%% % make sure NN exists
+%% Test On a block
 if(~exist('myNeuralNetwork'))
     error("You have not yet created your neural network! Be sure you run this section AFTER your neural network is created.");
 end
 
+r = MKR_MotorCarrier;
+r.servo(2,180)
+pause(1)
+
 % collect gesture
 Label = 1;
-r = MKR_MotorCarrier;
-rtdata = data_gather(r, Label)
+rtdata = read_block(r);
 
 % put accelerometer data into NN input form
 xTest = zeros(5,1,1,1);
 
-xTest(:,:,:,1) = rtdata; % YOU CAN MODIFY THIS LINE 
+xTest(:,:,:,1) = rtdata; 
 
 % Prediction based on NN
 prediction = classify(myNeuralNetwork,xTest);
@@ -107,5 +108,6 @@ prediction = classify(myNeuralNetwork,xTest);
 figure(); plot(rtdata', 'LineWidth', 1.5); %plot accelerometer traces
 legend('X','Y','Z'); ylabel('Acceleration'); xlabel('Time') %label axes
 title("Classification:", string(prediction)); %title plot with the label
+r.servo(2,0)
 
 
