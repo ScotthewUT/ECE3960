@@ -27,8 +27,9 @@ path_state     = zeros(1, 6);
 %   loc: 0 = pillar side, 1 = center, 2 = goal side
 %   paths A-D: 0 = path needs exploring, 1 = path previously explored
 
-% SET PIN MODE & BEGIN ANALOG INPUT STREAM
+% SET PIN MODES & BEGIN ANALOG INPUT STREAM
 r.pinMode(BUTTON_PIN, "input");
+r.pinMode(BUZZER_PIN, "output");
 bot.startStream('analog');
 pause(0.1);
 
