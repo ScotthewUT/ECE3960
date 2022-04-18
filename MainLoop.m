@@ -7,29 +7,34 @@ pause(0.1);
 % DEFINE CONSTANTS
 BUTTON_PIN = 13; % TODO: INSTALL BUTTON ON DIGITAL 13
 BUZZER_PIN = 14; % TODO: INSTALL BUZZER ON DIGITAL 14
+ENC_PER_REV = 1440;
 IR_RR = 1;
 IR_CR = 2;
 IR_CL = 3;
 IR_LL = 4;
 MTR_R = 3;
 MTR_L = 4;
+MTR_R_ENC = 1;
+MTR_L_ENC = 2;
 SERVO_PIN = 2;
 
 % INITIALIZE GLOBALS
 block_class    = 0; % 0 = No Block, 1 = Bad, 2 = Good, 3 = Excellent
+block_count    = 0;
 bot_state      = "CALIBRATE";
 ir_cal_data    = zeros(2, 4);
 servo_cal_line = [0, 0];
+
 path_state     = zeros(1, 6);
 % Path state is passed to PickPath for decision making:
 %   [dir, loc, path_A, path_B, path_C, path_D]
 %   dir: 0 = toward pillars, 1 = toward goals
 %   loc: 0 = pillar side, 1 = center, 2 = goal side
-%   paths A-D: 0 = path needs exploring, 1 = path previously explored
+%   paths: 0 = path needs exploring, 1 = path previously explored, 2 = dead end
 
 % SET PIN MODES & BEGIN ANALOG INPUT STREAM
-r.pinMode(BUTTON_PIN, "input");
-r.pinMode(BUZZER_PIN, "output");
+bot.pinMode(BUTTON_PIN, "input");
+bot.pinMode(BUZZER_PIN, "output");
 bot.startStream('analog');
 pause(0.1);
 
@@ -64,13 +69,13 @@ while true
         case "LINE FOLLOW" % Following line until intersection detected.
             intersection_detected = FollowLine(bot, ir_cal_data);
             if intersection_detected
-                bot_state = "PICK PATH";
+                bot_state = "INTERSECTION";
             else
                 bot_state = "LOST PATH";
             end
             
-        case "PICK PATH"   % At intersection and determing path choice.
-            path_state = PickPath(bot, path_state);
+        case "INTERSECTION"   % At intersection and determing path choice.
+            [bot_state, path_state] = Intersection(bot, path_state, ir_cal_data);
             
 %         case "PATH_FOLLOW"
 %             intersection_detected = FollowLine(bot, ir_cal_data);
