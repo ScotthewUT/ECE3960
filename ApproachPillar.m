@@ -4,7 +4,6 @@ MTR_L = 4;
 SERVO_PIN = 2;
 
 bot.servo(SERVO_PIN,0);
-pause(1);
 bot.motor(MTR_R, 9);
 bot.motor(MTR_L, 8);
 pulseVal = bot.ultrasonicPulse;

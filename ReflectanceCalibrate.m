@@ -9,7 +9,6 @@ MTR_R = 3;
 MTR_L = 4;
 MTR_SPD = 12;
 
-bot.reflectanceSetup();
 data = zeros(50, 4);
 cal_data = zeros(2, 4);
 

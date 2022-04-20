@@ -6,7 +6,7 @@ IR_RR = 1;
 IR_CR = 2;
 IR_CL = 3;
 IR_LL = 4;
-IR_OUTER_WEIGHT = 2.5;
+IR_OUTER_WEIGHT = 3.0;
 MTR_R = 3;
 MTR_L = 4;
 % INITIALiZE VARIABLES
@@ -16,7 +16,7 @@ lost_thr = 0.15;
 error = 0;
 error_delta = 0;
 prev_error = 0;
-count = 0;
+%count = 0;
 % FOLLOW LINE UNTIL INTERSECTION DETECTED
 while true
     % Get reflectance sensor reading and offset it with calibration data
@@ -26,7 +26,7 @@ while true
                  && ref(IR_CL) > intrsctn_thr && ref(IR_LL) > intrsctn_thr
             bot.motor(MTR_R, 0);
             bot.motor(MTR_L, 0);
-            fprintf("INTERSECTION DETECTED!");
+            fprintf("INTERSECTION DETECTED!\n");
             at_intrsctn = 1;
             break;
     % Check if path was lost
@@ -50,10 +50,10 @@ while true
     bot.motor(MTR_R, r_mtr_cmd);
     bot.motor(MTR_L, l_mtr_cmd);
     % Occasionally print error and motor commands
-    if mod(count,12) == 0
-        fprintf("Err = %.2f | R = %i | L = %i\n", round(error,2), r_mtr_cmd, l_mtr_cmd);
-    end
-    count = count + 1;
+%     if mod(count,12) == 0
+%         fprintf("Err = %.2f | R = %i | L = %i\n", round(error,2), r_mtr_cmd, l_mtr_cmd);
+%     end
+%     count = count + 1;
     
 end
 

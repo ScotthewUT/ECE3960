@@ -108,32 +108,49 @@ end
 
 bot.stopStream('analog');
 
-%% MOTOR ENCODER TESTING
-bot.resetEncoder(1)
-bot.resetEncoder(2)
-pause(0.1)
-[val1, val2] = bot.readEncoderPose()
+%% ROTATE
+% 180 deg = 1300 counts
+%  90 deg =  580 counts
+% Reset motor encoders
+bot.resetEncoder(MTR_R_ENC);
+bot.resetEncoder(MTR_L_ENC);
+pause(0.1);
+[enc_R, enc_L] = bot.readEncoderPose();
 
-MTR_R = 3;
-MTR_L = 4;
-
-
-
-bot.motor(MTR_R, -10)
-bot.motor(MTR_L, 10)
-
-tic;
-
-while val1 > -625 && val2 > -625
-    [val1, val2] = bot.readEncoderPose()
-    pause(0.01)
-    bot.motor(MTR_R, -10)
-    bot.motor(MTR_L, 10)
+target = 980;
+% Rotate bot
+while enc_R < target || enc_L < target
+    pause(0.01);
+    if enc_R < target
+        bot.motor(MTR_R, 11);
+    else
+        bot.motor(MTR_R, 0);
+    end
+    if enc_L < target
+        bot.motor(MTR_L, -11);
+    else
+        bot.motor(MTR_L, 0);
+    end
+    [enc_R, enc_L] = bot.readEncoderPose();
 end
 
-bot.motor(MTR_R, 0)
-pause(0.01)
-bot.motor(MTR_L, 0)
+bot.motor(MTR_R, 0);
+pause(0.025);
+bot.motor(MTR_L, 0);
+
+%%
+BUZZER_PIN = 14;
+bot.servo(SERVO_PIN, 0);
+bot.digitalWrite(BUZZER_PIN, 1);
+pause(3);
+GrabBlock(bot);
+bot.digitalWrite(BUZZER_PIN, 0);
+pause(0.5);
+data = ReadBlock(bot);
+pause(0.5);
+class = ClassifyBlock(data, myNeuralNetwork)
+bot.servo(SERVO_PIN, 0);
+
 
 %%
 bot.motor(MTR_R,0);

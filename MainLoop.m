@@ -3,11 +3,11 @@ clear; clc; close all; instrreset;
 pause(0.1);
 bot = MKR_MotorCarrier;
 pause(0.1);
+bot.reflectanceSetup();
 
 % DEFINE CONSTANTS
-BUTTON_PIN = 13; % TODO: INSTALL BUTTON ON DIGITAL 13
-BUZZER_PIN = 14; % TODO: INSTALL BUZZER ON DIGITAL 14
-ENC_PER_REV = 1440;
+BUTTON_PIN = 13;
+BUZZER_PIN = 14;
 IR_RR = 1;
 IR_CR = 2;
 IR_CL = 3;
@@ -23,6 +23,7 @@ block_class    = 0; % 0 = No Block, 1 = Bad, 2 = Good, 3 = Excellent
 block_count    = 0;
 bot_state      = "CALIBRATE";
 ir_cal_data    = zeros(2, 4);
+load("myNeuralNetwork.mat", "myNeuralNetwork");
 servo_cal_line = [0, 0];
 
 path_state     = zeros(1, 6);
@@ -44,13 +45,14 @@ while true
     switch bot_state
         
         case "CALIBRATE"   % Initialized & now calibrating servo and IR sensor.
-            [servo_cal_line(1), servo_cal_line(2)] = ServoCalibrate(bot);
+            %[servo_cal_line(1), servo_cal_line(2)] = ServoCalibrate(bot);
             ir_cal_data = ReflectanceCalibrate(bot);
             bot_state = "READY";
             
         case "READY"       % Calibrated and placed in starting position.
             % Path state: Facing pillars, center path, no paths explored.
-            path_state = [0, 1, 0, 0 , 0 , 0];
+            bot.reflectanceSetup();
+            path_state = [0, 1, 1, 2 , 1 , 0];
             % Wait for button press to begin run.
             begin = 0;
             while begin == 0
@@ -75,7 +77,9 @@ while true
             end
             
         case "INTERSECTION"   % At intersection and determing path choice.
-            [bot_state, path_state] = Intersection(bot, path_state, ir_cal_data);
+            [bot_state, path_state] = Intersection(bot, path_state, block_class, ir_cal_data);
+            disp(path_state)
+            disp(bot_state)
             
 %         case "PATH_FOLLOW"
 %             intersection_detected = FollowLine(bot, ir_cal_data);
@@ -90,7 +94,7 @@ while true
 %             end
             
         case "CHECK"       % At path end; checking for pillar.
-            detect_pillar = Pillar_Detection(r);
+            detect_pillar = PillarDetection(bot);
             if detect_pillar == true
                 bot_state = "APPROACH";
             else
@@ -98,8 +102,8 @@ while true
             end
             
         case "APPROACH"    % Approaching pillar.
-            approach_pillar = Approach_Pillar(r);
-            bot_state="GRAB";
+            ApproachPillar(bot);
+            bot_state = "GRAB";
             
         case "GRAB"        % Grabbing target with servo gripper.
             [encoder_val] = GrabBlock(bot);
@@ -107,10 +111,12 @@ while true
             bot_state="CLASSIFY";
             
         case "RETREAT"     % Retreating from pillar and returning to line.
-            %function for retreating the bot
-            bot_state = "LINE_FOLLOW";
+            Retreat(bot, ir_cal_data);
+            bot_state = "LINE FOLLOW";
             
         case "CLASSIFY"    % Classifying the currently held object.
+            block_data = ReadBlock(bot);
+            block_class = ClassifyBlock(block_data, myNeuralNetwork);
             bot_state = "RETREAT";
             
         case "DROP"        % Dropping object in goal.
@@ -122,7 +128,7 @@ while true
             bot_state = "RETREAT";
             
         otherwise          % Should never be reached...
-            fprintf("Oh balls! What happened?!");
+            fprintf("Oh balls! What happened?!\n");
             disp(path_state)
             break;
     end

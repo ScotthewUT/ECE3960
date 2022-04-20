@@ -15,7 +15,7 @@ pause(0.5);
 
 while cmd < 181
     bot.servo(SERVO_PIN, cmd);
-    pause(0.5);
+    pause(0.3);
     analog_vals = bot.getAverageData('analog', 15);
     enc_val = round(analog_vals(ENC_PIN));
     if enc_val < prev + THR
@@ -25,5 +25,7 @@ while cmd < 181
     prev = enc_val;
     cmd = cmd + INC;
 end
+
+bot.servo(SERVO_PIN, cmd - INC);
 
 end

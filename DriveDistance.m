@@ -11,7 +11,7 @@ MTR_L_ENC = 2;
 % RESET MOTOR ENCODERS
 bot.resetEncoder(MTR_R_ENC);
 bot.resetEncoder(MTR_L_ENC);
-pause(0.02);
+pause(0.1);
 [enc_R, enc_L] = bot.readEncoderPose();
 
 % SPIN MOTORS AT GIVEN SPEED UNTIL ENCODER COUNT REACHES TARGET
