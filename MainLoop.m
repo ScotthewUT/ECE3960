@@ -44,7 +44,7 @@ while true
     switch bot_state
         
         case "CALIBRATE"   % Initialized & now calibrating servo and IR sensor.
-            servo_cal_line = ServoCalibrate(bot);
+            [servo_cal_line(1), servo_cal_line(2)] = ServoCalibrate(bot);
             ir_cal_data = ReflectanceCalibrate(bot);
             bot_state = "READY";
             
