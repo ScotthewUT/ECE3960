@@ -1,60 +1,44 @@
-function path = PickPath(r, pathState)
-r.reflectanceSetup()
+%% 
+function PickPath(bot, path)
+
+% Define constants
+IR_RR = 1;
+IR_CR = 2;
+IR_CL = 3;
 IR_LL = 4;
-
-if pathState(3) == 0
-    SelectPath = 1;
-    else if pathState(4) == 0
-        SelectPath = 2;
-        else if pathState(5) == 0
-                SelectPath = 3;
-            else if pathState(6) == 0
-                    SelectPath = 4;
-                else
-                    disp("Error")
-                end
-            end
-        end
-end
-
 MTR_R = 3;
 MTR_L = 4;
+MTR_R_ENC = 1;
+MTR_L_ENC = 2;
 
-r.motor(MTR_R, 10)
-r.motor(MTR_L, 10)
-
-pause(1)
-
-r.motor(MTR_R, 0)
-r.motor(MTR_L, 0)
-
-r.resetEncoder(1)
-r.resetEncoder(2)
-pause(0.1)
-[val1, val2] = r.readEncoderPose()
+% Reset motor encoders
+bot.resetEncoder(MTR_R_ENC);
+bot.resetEncoder(MTR_L_ENC);
+pause(0.1);
+[enc_R, enc_L] = bot.readEncoderPose();
 
 % Rotate the bot 90 degrees
-while val1 > -625 && val2 > -625
-    [val1, val2] = r.readEncoderPose()
-    pause(0.01)
-    r.motor(MTR_R, -10)
-    r.motor(MTR_L, 10)
+while enc_R > -625 && enc_L > -625
+    pause(0.01);
+    [enc_R, enc_L] = bot.readEncoderPose();
+    bot.motor(MTR_R, -10);
+    bot.motor(MTR_L, 10);
 end
 
 pause(1)
 
 drop = false;
-while SelectPath > 0
-    r.motor(MTR_R, 10)
-    r.motor(MTR_L, -10)
-    reflectance = r.readReflectance();
+while path > 0
+    bot.motor(MTR_R, 10)
+    bot.motor(MTR_L, -10)
+    reflectance = bot.readReflectance();
     pause(0.01)
     LR = reflectance(4);
     if LR > 1000
-        SelectPath = SelectPath -1;
+        path = path -1;
         drop = true;
         while drop == true
-            reflectance = r.readReflectance();
+            reflectance = bot.readReflectance();
             LR = reflectance(4);
             if LR < 1200
                 drop = false;
@@ -62,9 +46,7 @@ while SelectPath > 0
         end
     end
 end
-r.motor(MTR_R, 0)
-r.motor(MTR_L, 0)   
-    
-    
+bot.motor(MTR_R, 0)
+bot.motor(MTR_L, 0)   
 
 end
