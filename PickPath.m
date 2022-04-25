@@ -1,5 +1,5 @@
 %% BOT SWEEPS THE FLOOR LOOKING FOR THE SPECIFIED PATH FROM LEFT-RIGHT
-function PickPath(bot, path, look_behind, ir_cal_data)
+function PickPath(bot, path, ir_cal_data)
 
 % Define constants
 INCR  = 15;
@@ -15,57 +15,11 @@ MTR_R_ENC = 1;
 MTR_L_ENC = 2;
 
 % Reset motor encoders
-bot.resetEncoder(MTR_R_ENC);
-bot.resetEncoder(MTR_L_ENC);
 bot.resetEncoder(MTR_L_ENC);
 bot.resetEncoder(MTR_R_ENC);
 pause(0.1);
 [enc_R, enc_L] = bot.readEncoderPose();
-
-% If bot is retreating, find the single line behind it
-if look_behind
-    % Turn bot about 140 deg \\ 90 deg = 580 counts, 180 deg = 1300 counts
-    target = 980;
-    while enc_R < target || enc_L < target
-        pause(0.01);
-        if enc_R < target
-            bot.motor(MTR_R, 11);
-        else
-            bot.motor(MTR_R, 0);
-        end
-        if enc_L < target
-            bot.motor(MTR_L, -11);
-        else
-            bot.motor(MTR_L, 0);
-        end
-        [enc_R, enc_L] = bot.readEncoderPose();
-    end
-    bot.motor(MTR_R, 0);
-    bot.motor(MTR_L, 0);
-    
-    % Look for edges of line with left IR sensor
-    
-    ref_RR = CalibrateRefReading(bot.readReflectance(), ir_cal_data);
-    pause(0.1);
-    ref_RR = CalibrateRefReading(bot.readReflectance(), ir_cal_data);
-    pause(0.1);
-    disp(ref_RR)
-    bot.motor(MTR_R, 9);
-    bot.motor(MTR_L, -9);
-    while ref_RR(IR_LL) < L_THR
-        ref_RR = CalibrateRefReading(bot.readReflectance(), ir_cal_data);
-        pause(0.02);
-        disp(ref_RR)
-    end
-    while ref_RR(IR_LL) > L_THR
-        ref_RR = CalibrateRefReading(bot.readReflectance(), ir_cal_data);
-        pause(0.02);
-        disp(ref_RR)
-    end
-    bot.motor(MTR_R, 0);
-    bot.motor(MTR_L, 0);
-    return;
-end
+[enc_R, enc_L] = bot.readEncoderPose();
 
 DriveDistance(bot, 3, 11);
 % Turn bot about 140 deg \\ 90 deg = 580 counts, 180 deg = 1300 counts
@@ -117,7 +71,7 @@ bot.motor(MTR_L, 0);
 
 
 
-pause(3);
+pause(0.5);
 drop = false;
 while path > 0
     bot.motor(MTR_R, -9)

@@ -70,12 +70,12 @@ switch intrsctn
             end
         end
         path_state(2) = 0;
+        PickPath(bot, path, ir_cal_data);
         bot_state = "LINE FOLLOW";
-        PickPath(bot, path, 0, ir_cal_data);
     case "PILLAR"
         bot_state = "CHECK";
     case "PILLARS->CENTER"
-        DriveDistance(bot, 3, 10);
+        DriveDistance(bot, 8, 13);
         path_state(2) = 1;
         bot_state = "LINE FOLLOW";
     case "CENTER->GOALS"
@@ -86,9 +86,16 @@ switch intrsctn
         end
         path_state(2) = 2;
         bot_state = "LINE FOLLOW";
-        PickPath(bot, path, 0, ir_cal_data);
+        PickPath(bot, path, ir_cal_data);
     case "GOAL"
-        bot_state = "DROP";
+        DropBlock(bot);
+        pause(0.1);
+        DriveDistance(bot, 6, -12);
+        pause(0.5);
+        Retreat(bot, ir_cal_data);
+        bot_state = "LINE FOLLOW";
+        path_state(1) = 0;
+        path_state(2) = 2;
     case "GOALS->CENTER"
         path_state(2) = 1;
         bot_state = "LINE FOLLOW";
@@ -97,3 +104,4 @@ switch intrsctn
 end
 
 end
+                                                       

@@ -2,16 +2,16 @@
 function [line_found] = RecoverLine(bot, ir_cal_data)
 
 % Define constants
-ENC_INC = 50;
-ENC_MAX = 300;
+ENC_INC = 200;
+ENC_MAX = 700;
 IR_LL = 4;
 IR_RR = 1;
-LINE_THR = 0.4;
+LINE_THR = 0.3;
 MTR_L = 4;
 MTR_R = 3;
 MTR_L_ENC = 2;
 MTR_R_ENC = 1;
-MTR_SPD = 11;
+MTR_SPD = 12;
 
 % Initialize variables
 enc_L = 0;
@@ -24,10 +24,10 @@ pause(0.05);
 bot.motor(MTR_R, MTR_SPD);
 while true
     ref = CalibrateRefReading(bot.readReflectance(), ir_cal_data);
-    ref = CalibrateRefReading(bot.readReflectance(), ir_cal_data);
+    ref = CalibrateRefReading(bot.readReflectance(), ir_cal_data)
     [enc_R, ~] = bot.readEncoderPose();
     [enc_R, ~] = bot.readEncoderPose();
-    if enc_R > ENC_MAX
+    if enc_R < -ENC_MAX || ENC_MAX < enc_R
         bot.motor(MTR_R, 0);
         line_found = 0;
         break;
@@ -44,7 +44,7 @@ while true
         pause(0.05);
         [~, enc_L] = bot.readEncoderPose();
         [~, enc_L] = bot.readEncoderPose();
-        while enc_L < ENC_INC
+        while -ENC_INC < enc_L && enc_L < ENC_INC
             bot.motor(MTR_L, MTR_SPD);
             [~, enc_L] = bot.readEncoderPose();
             [~, enc_L] = bot.readEncoderPose();
@@ -63,7 +63,7 @@ while true
     ref = CalibrateRefReading(bot.readReflectance(), ir_cal_data);
     [~, enc_L] = bot.readEncoderPose();
     [~, enc_L] = bot.readEncoderPose();
-    if enc_L > ENC_MAX * 2
+    if enc_L < -ENC_MAX * 3.5 || ENC_MAX * 3.5 < enc_L
         bot.motor(MTR_L, 0);
         line_found = 0;
         return;
@@ -80,7 +80,7 @@ while true
         pause(0.05);
         [enc_R, ~] = bot.readEncoderPose();
         [enc_R, ~] = bot.readEncoderPose();
-        while enc_R < ENC_INC
+        while -ENC_INC < enc_R && enc_R < ENC_INC
             bot.motor(MTR_R, MTR_SPD);
             [enc_R, ~] = bot.readEncoderPose();
             [enc_R, ~] = bot.readEncoderPose();

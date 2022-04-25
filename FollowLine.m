@@ -2,6 +2,7 @@
 function [at_intrsctn] = FollowLine(bot, ir_cal_data)
 
 % DEFINE CONSTANTS
+BUZZER_PIN = 14;
 IR_RR = 1;
 IR_CR = 2;
 IR_CL = 3;
@@ -21,6 +22,7 @@ prev_error = 0;
 % count = 0;
 % FOLLOW LINE UNTIL INTERSECTION DETECTED
 while true
+    bot.setRGB(0, 0, 255);
     % Get reflectance sensor reading and offset it with calibration data
     ref = CalibrateRefReading(bot.readReflectance(), ir_cal_data);
     % Check for intersection
@@ -32,21 +34,40 @@ while true
             at_intrsctn = 1;
             bot.motor(MTR_L, 0);
             bot.motor(MTR_R, 0);
-            break;
+            bot.setRGB(0, 255, 225);
+            bot.digitalWrite(BUZZER_PIN, 1);
+            pause(0.1);
+            bot.digitalWrite(BUZZER_PIN, 0);
+            pause(0.2);
+            bot.digitalWrite(BUZZER_PIN, 1);
+            pause(0.1);
+            bot.digitalWrite(BUZZER_PIN, 0);
+            pause(0.05);
+            return;
     % Check if path was lost
     elseif ref(IR_RR) < lost_thr && ref(IR_CR) < lost_thr ...
             && ref(IR_CL) < lost_thr && ref(IR_LL) < lost_thr
         bot.motor(MTR_R, 0);
         bot.motor(MTR_L, 0);
         fprintf("OH NO!  WHERE'S THE LINE?!  WHERE AM I?\n");
+        bot.setRGB(255, 0, 0);
+        bot.digitalWrite(BUZZER_PIN, 1);
+        pause(0.2);
+        bot.digitalWrite(BUZZER_PIN, 0);
         pause(0.05);
-%         line_found = RecoverLine(bot, ir_cal_data);
-%         if line_found
-%             continue;
-%         else
-%             fprintf("PATH LOST!  ;(\n");
-%             return;
-%         end
+        bot.setRGB(210,45,0);
+        line_found = RecoverLine(bot, ir_cal_data);
+        if line_found
+            continue;
+        else
+            fprintf("PATH LOST!  ;(\n");
+            bot.setRGB(255, 0, 0);
+            bot.digitalWrite(BUZZER_PIN, 1);
+            pause(0.5);
+            bot.digitalWrite(BUZZER_PIN, 0);
+            pause(0.05);
+            return;
+        end
         return;
     end
     % Calculate error from reflectance readings & weighted outer sensors

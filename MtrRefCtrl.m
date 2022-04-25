@@ -1,9 +1,9 @@
 %% PD controller that takes error terms from reflectance sensor and returns motor duty-cycle commmand.
 function [mtr_cmd] = MtrRefCtrl(error, error_delta)
 
-MTR_SPD = 12;
-MIN_MTR_SPD = 9;
-MAX_MTR_SPD = 16;
+MTR_SPD = 13;
+MIN_MTR_SPD = 10;
+MAX_MTR_SPD = 18;
 KP = 1.9;
 KD = 0.4;
 
