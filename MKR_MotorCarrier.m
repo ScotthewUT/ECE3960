@@ -161,8 +161,8 @@ classdef MKR_MotorCarrier < handle
             sendOverUDP(obj,13,1,1)
         end
         function vals = readReflectance(obj)
-            sendOverUDP(obj,14,1,1);
-            pause(0.07);
+            sendOverUDP(obj,14,1,1)
+            pause(0.08)
             v1 = str2num(obj.irBuffer(1));
             v2 = str2num(obj.irBuffer(2));
             v3 = str2num(obj.irBuffer(3));
@@ -407,7 +407,7 @@ classdef MKR_MotorCarrier < handle
 
         function [val1,val2] = readEncoderPose(obj)
             sendOverUDP(obj,16,1,1);
-            pause(0.05);
+            pause(0.08);
             val1 = str2num(obj.encoderPos(1));
             val2 = str2num(obj.encoderPos(2));
         end

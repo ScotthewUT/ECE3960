@@ -45,8 +45,8 @@ while true
     switch bot_state
         
         case "CALIBRATE"   % Initialized & now calibrating servo and IR sensor.
-            %[servo_cal_line(1), servo_cal_line(2)] = ServoCalibrate(bot);
-            ir_cal_data = ReflectanceCalibrate(bot);
+            [servo_cal_line(1), servo_cal_line(2)] = ServoCalibrate(bot);
+            ir_cal_data = ReflectanceCalibrate(bot, 3);
             bot_state = "READY";
             
         case "READY"       % Calibrated and placed in starting position.
@@ -80,18 +80,6 @@ while true
             [bot_state, path_state] = Intersection(bot, path_state, block_class, ir_cal_data);
             disp(path_state)
             disp(bot_state)
-            
-%         case "PATH_FOLLOW"
-%             intersection_detected = FollowLine(bot, ir_cal_data);
-%             if grab_object==true
-%                 bot_state="DROP";
-%             else
-%                 if intersection_detected
-%                     bot_state="CHECK";
-%                 else
-%                     bot_state="RETREAT";
-%                 end
-%             end
             
         case "CHECK"       % At path end; checking for pillar.
             detect_pillar = PillarDetection(bot);

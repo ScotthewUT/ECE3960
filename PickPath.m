@@ -16,8 +16,9 @@ MTR_L_ENC = 2;
 
 % Reset motor encoders
 bot.resetEncoder(MTR_R_ENC);
-pause(0.05);
 bot.resetEncoder(MTR_L_ENC);
+bot.resetEncoder(MTR_L_ENC);
+bot.resetEncoder(MTR_R_ENC);
 pause(0.1);
 [enc_R, enc_L] = bot.readEncoderPose();
 
